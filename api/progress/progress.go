@@ -124,7 +124,7 @@ func Update(c *gin.Context) {
 		TvId, err := strconv.Atoi(_TvId)
 		for key, value := range data.Data.ArtPlayerSettings.Times {
 			progressTv := &models.ProgressTv{}
-			err = db.Model(&models.ProgressTv{}).Where("user_id = ? and tv_id = ? and season_id = ? and tv_path = ?", UserId, TvId, SeasonId, key).First(progressTv).Error
+			err = db.Model(&models.ProgressTv{}).Where("user_id = ?  and tv_path = ?", UserId, key).First(progressTv).Error
 			progressTv.Time = int(value)
 			if errors.Is(err, gorm.ErrRecordNotFound) {
 				progressTv.UserId = UserId
@@ -133,7 +133,7 @@ func Update(c *gin.Context) {
 				progressTv.TvPath = key
 				err = db.Debug().Model(&models.ProgressTv{}).Create(&progressTv).Error
 			} else {
-				err = db.Model(&models.ProgressTv{}).Where("user_id = ? and tv_id = ? and season_id = ?", UserId, TvId, SeasonId).Select("time").Updates(&progressTv).Error
+				err = db.Model(&models.ProgressTv{}).Where("user_id = ?  and tv_path = ?", UserId, key).Update("time", value).Error
 			}
 
 		}
