@@ -332,6 +332,7 @@ func Run() {
 	// 获取弹幕文件
 	_barrage := r.Group("/v1/api/barrage")
 	_barrage.GET("/get", barrage.Get)
+	_barrage.GET("/time_update", barrage.TimeUpdate)
 
 	// 获取文件数据
 	_getFile := r.Group("/v1/api/get_file", auth.JWTAuth())

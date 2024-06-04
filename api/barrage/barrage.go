@@ -87,3 +87,36 @@ func Get(c *gin.Context) {
 
 	}
 }
+func TimeUpdate(c *gin.Context) {
+	_type := c.Query("type")
+	season_id := c.Query("season_id")
+	if _type == "" || season_id == "" {
+		c.JSON(404, gin.H{"code": 404, "msg": "缺少关键参数"})
+		return
+	}
+	db := database.NewDb()
+	_time := ""
+	if _type == "head_time" {
+		_time = c.Query("head_time")
+	} else {
+		_time = c.Query("tail_time")
+	}
+	if _time == "" {
+		c.JSON(404, gin.H{"code": 404, "msg": "缺少关键参数"})
+		return
+	}
+	floatValue, err := strconv.ParseFloat(_time, 64)
+	if err != nil {
+		c.JSON(404, gin.H{"code": 404, "msg": "时间错误"})
+		return
+	}
+
+	err = db.Model(&models.TheSeason{}).Where("id = ?", season_id).Update(_type, int(floatValue)).Error
+	if err != nil {
+		c.JSON(404, gin.H{"code": 404, "msg": "更新失败"})
+		return
+	}
+	c.JSON(200, gin.H{"code": 200, "msg": "更新成功"})
+	return
+
+}
