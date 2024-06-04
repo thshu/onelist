@@ -116,7 +116,7 @@ func TimeUpdate(c *gin.Context) {
 		c.JSON(404, gin.H{"code": 404, "msg": "更新失败"})
 		return
 	}
-	c.JSON(200, gin.H{"code": 200, "msg": "更新成功"})
+	c.JSON(200, gin.H{"code": 200, "msg": "更新成功", "data": _time})
 	return
 
 }
