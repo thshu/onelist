@@ -113,4 +113,8 @@ nohup ./onelist -run server >/dev/null 2>&1 &
 
 可以进入错误文件中查看
 
+## 8.弹幕加载需要满足一定的目录规则
+alist内结构如下图所示：
+![](./docs/imgs/04.png)
+
 原仓库：https://github.com/msterzhang/onelist
