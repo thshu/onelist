@@ -9,7 +9,7 @@ if [ "$1" = "dev" ]; then
   webVersion="dev"
 else
   version=$(git describe --abbrev=0 --tags)
-  webVersion=$(wget -qO- -t1 -T2 "https://api.github.com/repos/msterzhang/onelist-web/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
+  webVersion=$(wget -qO- -t1 -T2 "https://api.github.com/repos/thshu/onelist-web/releases/latest" | grep "tag_name" | head -n 1 | awk -F ":" '{print $2}' | sed 's/\"//g;s/,//g;s/ //g')
 fi
 
 echo "backend version: $version"
@@ -18,7 +18,7 @@ echo "frontend version: $webVersion"
 ldflags="-w -s"
 
 FetchWebDev() {
-  curl -L https://codeload.github.com/msterzhang/onelist-web/tar.gz/refs/heads/dev -o web-dist-dev.tar.gz
+  curl -L https://codeload.github.com/thshu/onelist-web/tar.gz/refs/heads/dev -o web-dist-dev.tar.gz
   tar -zxvf web-dist-dev.tar.gz
   rm -rf public/dist
   mv -f web-dist-dev/dist public
@@ -26,7 +26,7 @@ FetchWebDev() {
 }
 
 FetchWebRelease() {
-  curl -L https://github.com/msterzhang/onelist-web/releases/latest/download/dist.tar.gz -o dist.tar.gz
+  curl -L https://github.com/thshu/onelist-web/releases/latest/download/dist.tar.gz -o dist.tar.gz
   tar -zxvf dist.tar.gz
   rm -rf public/dist
   mv -f dist public
