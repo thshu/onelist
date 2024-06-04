@@ -1,7 +1,9 @@
 package controllers
 
 import (
+	"github.com/msterzhang/onelist/plugins/alist"
 	"strconv"
+	"strings"
 
 	"github.com/msterzhang/onelist/api/database"
 	"github.com/msterzhang/onelist/api/models"
@@ -78,6 +80,18 @@ func GetTheMovieById(c *gin.Context) {
 			return
 		}
 		themovieNew := service.TheMovieService(themovie, c.GetString("UserId"))
+		gallery := models.Gallery{}
+		err = db.Model(&models.Gallery{}).Where("gallery_uid = ?", themovieNew.GalleryUid).First(&gallery).Error
+		if err != nil {
+			c.JSON(200, gin.H{"code": 201, "msg": "Gallery not found!", "data": ""})
+			return
+		}
+		file_data, err := alist.AlistFileUrl(gallery, strings.Replace(themovieNew.Url, "/d", "", -1))
+		if err != nil {
+			c.JSON(200, gin.H{"code": 201, "msg": "获取视频播放链接失败！，" + err.Error(), "data": ""})
+			return
+		}
+		themovieNew.Url = themovieNew.Url + "?sign=" + string(file_data.Data.Sign)
 		tag := "剧情"
 		if len(themovieNew.Genres) > 1 {
 			if themovieNew.Genres[0].Name == tag {

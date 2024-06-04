@@ -14,5 +14,13 @@ type Progress struct {
 }
 
 type ProgressRequestBody struct {
-	Data map[string]interface{} `json:"data"`
+	Data YourModel `json:"data"`
+}
+
+type ArtPlayerSettings struct {
+	Times map[string]float64 `json:"times"`
+}
+type YourModel struct {
+	ArtPlayerSettings ArtPlayerSettings      `json:"artplayer_settings"`
+	TV                map[string]interface{} `json:"tv"`
 }

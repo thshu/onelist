@@ -46,18 +46,24 @@ func Update(c *gin.Context) {
 	}
 	requestBody := &models.ProgressRequestBody{}
 
-	err = c.ShouldBindJSON(&requestBody)
+	err = c.ShouldBindJSON(requestBody)
 	if err != nil {
 		c.JSON(400, gin.H{"msg": "缺少参数"})
 		return
 	}
+	data := models.ProgressRequestBody{}
+	data.Data = requestBody.Data
+
 	progress := &models.Progress{}
 	dbprogress := &models.Progress{}
 	err = db.Model(&models.Progress{}).Where("user_id = ?", UserId).First(progress).Error
-	d, _ := json.Marshal(requestBody.Data)
-	progress.Data = string(d)
-	progress.UserId = UserId
+
+	db_data := models.YourModel{}
+	_ = json.Unmarshal([]byte(progress.Data), &db_data)
 	if errors.Is(err, gorm.ErrRecordNotFound) {
+		d, _ := json.Marshal(data.Data)
+		progress.Data = string(d)
+		progress.UserId = UserId
 		progress.CreatedAt = dbprogress.CreatedAt
 		err = db.Debug().Model(&models.Progress{}).Create(&progress).Error
 		if err != nil {
@@ -67,6 +73,19 @@ func Update(c *gin.Context) {
 		c.JSON(200, gin.H{"msg": "记录创建成功"})
 		return
 	}
+	for key, value := range data.Data.ArtPlayerSettings.Times {
+		db_data.ArtPlayerSettings.Times[key] = value
+
+	}
+	if db_data.TV == nil {
+		db_data.TV = data.Data.TV
+	} else {
+		for key, value := range data.Data.TV {
+			db_data.TV[key] = value
+		}
+	}
+	d, _ := json.Marshal(db_data)
+	progress.Data = string(d)
 
 	err = db.Model(&models.Progress{}).Where("id = ?", progress.Id).Select("*").Updates(&progress).Error
 	if err != nil {
