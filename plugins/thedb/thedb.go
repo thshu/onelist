@@ -407,6 +407,10 @@ func TheTvDb(id int, file string, GalleryUid string) (models.TheTv, error) {
 	if err != nil {
 		return models.TheTv{}, err
 	}
+	// 获取片头片尾的代码
+	theseason.HeadTime = 0
+	theseason.TailTime = 0
+	// 获取片头片尾的代码
 	season, err := GetSeasonWithTheTv(data, SeasonNumber)
 	if err != nil {
 		return models.TheTv{}, err

@@ -5,9 +5,9 @@ import (
 	"github.com/msterzhang/onelist/api/GetFile"
 	"github.com/msterzhang/onelist/api/barrage"
 	"github.com/msterzhang/onelist/api/progress"
-	"io/fs"
-	"log"
+	"io/ioutil"
 	"net/http"
+	"path/filepath"
 
 	"github.com/gin-gonic/gin"
 	"github.com/msterzhang/onelist/api/auth"
@@ -16,7 +16,6 @@ import (
 	"github.com/msterzhang/onelist/api/middleware"
 	"github.com/msterzhang/onelist/auto"
 	"github.com/msterzhang/onelist/config"
-	"github.com/msterzhang/onelist/public"
 )
 
 // 初始化配置及数据库
@@ -29,19 +28,29 @@ func InitServer() {
 // 用于打包的静态文件
 func Static(r *gin.Engine) {
 	folders := []string{"js", "css", "images", "fonts", "img"}
-	for i, folder := range folders {
-		folder = "dist/" + folder
-		sub, err := fs.Sub(public.Public, folder)
-		if err != nil {
-			log.Fatalf("can't find folder: %s", folder)
-		}
-		r.StaticFS(fmt.Sprintf("/%s/", folders[i]), http.FS(sub))
+	for _, folder := range folders {
+		r.Static("/"+folder, "dist/"+folder)
 	}
 }
 
 func IndexView(c *gin.Context) {
 	c.Writer.WriteHeader(200)
-	b, _ := public.Public.ReadFile("dist/index.html")
+	//b, _ := public.Public.ReadFile("dist/index.html")
+	// 获取当前工作目录
+	cwd, err := filepath.Abs(filepath.Dir("."))
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Internal Server Error: %v", err)
+		return
+	}
+	// 构建文件路径
+	filePath := filepath.Join(cwd, "dist", "index.html")
+	// 读取文件内容
+	b, err := ioutil.ReadFile(filePath)
+	if err != nil {
+		c.String(http.StatusInternalServerError, "Internal Server Error: %v", err)
+		return
+	}
+
 	_, _ = c.Writer.Write(b)
 	c.Writer.Header().Add("Accept", "text/html")
 	c.Writer.Flush()
@@ -67,8 +76,9 @@ func Run() {
 	r := gin.Default()
 	r.Use(middleware.CORSMiddleware())
 	Static(r)
-	r.GET("/favicon.ico", Faviconico)
+	//r.GET("/favicon.ico", Faviconico)
 	r.GET("/", IndexView)
+	//r.Static("/static", "./dist")
 	r.NoRoute(IndexView)
 
 	// 用户
