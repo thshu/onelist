@@ -16,7 +16,7 @@ jobs:
       - name: prerelease
         uses: irongut/EditRelease@v1.2.0
         with:
-          token: ${{ secrets.MY_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           id: ${{ github.event.release.id }}
           prerelease: true
 
@@ -50,7 +50,7 @@ jobs:
       - name: prerelease
         uses: irongut/EditRelease@v1.2.0
         with:
-          token: ${{ secrets.MY_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           id: ${{ github.event.release.id }}
           prerelease: false
 
