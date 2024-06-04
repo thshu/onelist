@@ -11,6 +11,7 @@ import (
 	"regexp"
 	"strings"
 	"time"
+	"unicode"
 
 	"github.com/msterzhang/onelist/api/database"
 	"github.com/msterzhang/onelist/api/models"
@@ -212,6 +213,15 @@ func GetTheSeasonData(id int, item int) (models.TheSeason, error) {
 	return data, nil
 }
 
+func containsChinese(s string) bool {
+	for _, r := range s {
+		if unicode.Is(unicode.Han, r) {
+			return true
+		}
+	}
+	return false
+}
+
 // 获取演员信息
 func GetThePersonData(id int) (models.ThePerson, error) {
 	api := fmt.Sprintf("%s/person/%d?api_key=%s&language=zh", TheApi, id, config.KeyDb)
@@ -220,6 +230,7 @@ func GetThePersonData(id int) (models.ThePerson, error) {
 		return models.ThePerson{}, err
 	}
 	req.Header.Set("User-Agent", config.UA)
+	// 设置本地代理
 	client := http.Client{
 		Timeout: timeOut,
 	}
@@ -233,7 +244,17 @@ func GetThePersonData(id int) (models.ThePerson, error) {
 		return models.ThePerson{}, err
 	}
 	var data = models.ThePerson{}
+	var responseData = models.ThePersonResponse{}
 	err = json.Unmarshal(body, &data)
+	err = json.Unmarshal(body, &responseData)
+	if len(responseData.AlsoKnownAs) > 0 {
+		for _, v := range responseData.AlsoKnownAs {
+			if containsChinese(v) {
+				data.Name = responseData.AlsoKnownAs[len(responseData.AlsoKnownAs)-1]
+				continue
+			}
+		}
+	}
 	if err != nil {
 		return models.ThePerson{}, err
 	}

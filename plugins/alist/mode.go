@@ -39,9 +39,16 @@ type AlistFileData struct {
 	Code    int    `json:"code"`
 	Message string `json:"message"`
 	Data    struct {
-		Name string `json:"name"`
-		Sign string `json:"sign"`
+		Name    string    `json:"name"`
+		Sign    string    `json:"sign"`
+		Thumb   string    `json:"thumb"`
+		RawUrl  string    `json:"raw_url"`
+		Related []Related `json:"related"`
 	}
+}
+
+type Related struct {
+	Name string `json:"name"`
 }
 
 type AliOpenForm struct {

@@ -2,6 +2,7 @@ package api
 
 import (
 	"fmt"
+	"github.com/msterzhang/onelist/api/GetFile"
 	"github.com/msterzhang/onelist/api/barrage"
 	"github.com/msterzhang/onelist/api/progress"
 	"io/fs"
@@ -331,6 +332,10 @@ func Run() {
 	// 获取弹幕文件
 	_barrage := r.Group("/v1/api/barrage")
 	_barrage.GET("/get", barrage.Get)
+
+	// 获取文件数据
+	_getFile := r.Group("/v1/api/get_file", auth.JWTAuth())
+	_getFile.POST("/get", GetFile.Get)
 
 	r.GET("/t/p/*path", controllers.ImgServer)
 	r.GET("/gallery/*path", controllers.GalleryImgServer)

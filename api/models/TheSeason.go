@@ -27,4 +27,11 @@ type TheSeason struct {
 	PosterPath   string    `json:"poster_path"`
 	SeasonNumber int       `json:"season_number"`
 	TheTvID      uint      `json:"the_tv_id"`
+	HeadTime     int       `json:"head_time"`
+	TailTime     int       `json:"tail_time"`
+}
+
+type Skip struct {
+	HeadTime int `json:"head_time"`
+	TailTime int `json:"tail_time"`
 }

@@ -2,3 +2,4 @@ images
 *.db
 *.exe
 public/dist
+.idea

@@ -26,7 +26,7 @@ func Get(c *gin.Context) {
 		c.JSON(400, gin.H{"msg": "该用户不存在"})
 		return
 	}
-	if TvId == "" && SeasonId == "" {
+	if TvId == "" {
 		progress := &models.Progress{}
 		err = db.Model(&models.Progress{}).Where("user_id = ?", UserId).Find(progress).Error
 		if err != nil {
@@ -50,8 +50,6 @@ func Get(c *gin.Context) {
 func Post(c *gin.Context) {
 	db := database.NewDb()
 	UserId := c.Request.Header.Get("UserId")
-	TvId := c.Query("tv_id")
-	SeasonId := c.Query("season_id")
 	if UserId == "" {
 		c.JSON(400, gin.H{"msg": "未获取到所需字段"})
 		return
@@ -63,28 +61,17 @@ func Post(c *gin.Context) {
 	}
 	request := &models.Request{}
 	err = c.ShouldBindJSON(request)
-	if TvId == "" && SeasonId == "" {
-		progress := &models.Progress{}
-		err = db.Model(&models.Progress{}).Where("user_id = ?", UserId).Find(progress).Error
-		if err != nil {
-			c.JSON(200, gin.H{})
-			return
-		}
-		c.JSON(200, gin.H{"data": progress.Data})
-		return
-	} else {
-		progress := &models.ProgressTv{}
-		_tv_path, err := url.QueryUnescape(request.Data)
-		tv_path_list := strings.Split(_tv_path, "/d")
-		tv_path := "/d" + tv_path_list[len(tv_path_list)-1]
-		err = db.Model(&models.ProgressTv{}).Where("user_id = ? and tv_id = ? and season_id = ? and tv_path = ?", UserId, TvId, SeasonId, tv_path).First(progress).Error
-		if err != nil {
-			c.JSON(200, gin.H{})
-			return
-		}
-		c.JSON(200, gin.H{"data": progress})
+	progress := &models.ProgressTv{}
+	_tv_path, err := url.QueryUnescape(request.Data)
+	tv_path_list := strings.Split(_tv_path, "/d")
+	tv_path := "/d" + tv_path_list[len(tv_path_list)-1]
+	err = db.Model(&models.ProgressTv{}).Where("user_id = ? and tv_path = ?", UserId, tv_path).First(progress).Error
+	if err != nil {
+		c.JSON(200, gin.H{})
 		return
 	}
+	c.JSON(200, gin.H{"data": progress})
+	return
 }
 
 func Update(c *gin.Context) {
@@ -132,21 +119,21 @@ func Update(c *gin.Context) {
 		c.JSON(200, gin.H{"msg": "记录创建成功"})
 		return
 	}
-	if _TvId != "" && _SeasonId != "" {
+	if _TvId != "" {
 		SeasonId, err := strconv.Atoi(_SeasonId)
 		TvId, err := strconv.Atoi(_TvId)
 		for key, value := range data.Data.ArtPlayerSettings.Times {
 			progressTv := &models.ProgressTv{}
-			progressTv.UserId = UserId
-			progressTv.SeasonId = uint(SeasonId)
-			progressTv.TvId = uint(TvId)
-			progressTv.Time = int(value)
-			progressTv.TvPath = key
 			err = db.Model(&models.ProgressTv{}).Where("user_id = ? and tv_id = ? and season_id = ? and tv_path = ?", UserId, TvId, SeasonId, key).First(progressTv).Error
+			progressTv.Time = int(value)
 			if errors.Is(err, gorm.ErrRecordNotFound) {
+				progressTv.UserId = UserId
+				progressTv.SeasonId = uint(SeasonId)
+				progressTv.TvId = uint(TvId)
+				progressTv.TvPath = key
 				err = db.Debug().Model(&models.ProgressTv{}).Create(&progressTv).Error
 			} else {
-				err = db.Model(&models.ProgressTv{}).Where("user_id = ? and tv_id = ? and season_id = ?", UserId, TvId, SeasonId).Select("*").Updates(&progressTv).Error
+				err = db.Model(&models.ProgressTv{}).Where("user_id = ? and tv_id = ? and season_id = ?", UserId, TvId, SeasonId).Select("time").Updates(&progressTv).Error
 			}
 
 		}
