@@ -28,8 +28,8 @@ FetchWebDev() {
 FetchWebRelease() {
   curl -L https://github.com/thshu/onelist-web/releases/latest/download/dist.tar.gz -o dist.tar.gz
   tar -zxvf dist.tar.gz
-  rm -rf public/dist
-  mv -f dist public
+#  rm -rf public/dist
+#  mv -f dist public
   rm -rf dist.tar.gz
 }
 
@@ -95,17 +95,17 @@ MakeRelease() {
   mkdir compress
   for i in $(find . -type f -name "$appName-linux-*"); do
     cp "$i" onelist
-    tar -czvf compress/"$i".tar.gz onelist
+    tar -czvf compress/"$i".tar.gz onelist ../dist
     rm -f onelist
   done
   for i in $(find . -type f -name "$appName-darwin-*"); do
     cp "$i" onelist
-    tar -czvf compress/"$i".tar.gz onelist
+    tar -czvf compress/"$i".tar.gz onelist ../dist
     rm -f onelist
   done
   for i in $(find . -type f -name "$appName-windows-*"); do
     cp "$i" onelist.exe
-    zip compress/$(echo $i | sed 's/\.[^.]*$//').zip onelist.exe
+    zip compress/$(echo $i | sed 's/\.[^.]*$//').zip onelist.exe ../dist
     rm -f onelist.exe
   done
   cd compress
