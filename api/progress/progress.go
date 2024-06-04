@@ -64,10 +64,14 @@ func Post(c *gin.Context) {
 	progress := &models.ProgressTv{}
 	_tv_path, err := url.QueryUnescape(request.Data)
 	tv_path_list := strings.Split(_tv_path, "/d")
-	tv_path := "/d" + tv_path_list[len(tv_path_list)-1]
+	tv_path_list = strings.Split(tv_path_list[len(tv_path_list)-1], "&")
+	tv_path := "/d" + tv_path_list[0]
 	err = db.Model(&models.ProgressTv{}).Where("user_id = ? and tv_path = ?", UserId, tv_path).First(progress).Error
-	if err != nil {
+	if errors.Is(err, gorm.ErrRecordNotFound) {
 		c.JSON(200, gin.H{})
+		return
+	} else if err != nil {
+		c.JSON(200, gin.H{"error": err.Error()})
 		return
 	}
 	c.JSON(200, gin.H{"data": progress})
@@ -133,7 +137,7 @@ func Update(c *gin.Context) {
 				progressTv.TvPath = key
 				err = db.Debug().Model(&models.ProgressTv{}).Create(&progressTv).Error
 			} else {
-				err = db.Model(&models.ProgressTv{}).Where("user_id = ?  and tv_path = ?", UserId, key).Update("time", value).Error
+				err = db.Model(&models.ProgressTv{}).Where("user_id = ?  and tv_path = ?", UserId, key).Update("time", int(value)).Error
 			}
 
 		}
