@@ -55,7 +55,9 @@ func Get(c *gin.Context) {
 				c.JSON(200, gin.H{"code": 201, "msg": "获取弹幕文件出错或此文件无弹幕，" + err.Error(), "data": ""})
 				return
 			}
-			c.JSON(200, gin.H{"code": 200, "msg": "获取弹幕文件成功", "data": file_data, "url": gallery.AlistHost + "/d" + path + "?sign=" + file_data.Data.Sign})
+			//c.JSON(200, gin.H{"code": 200, "msg": "获取弹幕文件成功", "data": file_data, "url": gallery.AlistHost + "/d" + path + "?sign=" + file_data.Data.Sign})
+			c.Redirect(302, gallery.AlistHost+"/d"+path+"?sign="+file_data.Data.Sign)
+			return
 		}(repo)
 	}
 	if gallery_type == "movie" {
@@ -79,7 +81,9 @@ func Get(c *gin.Context) {
 			c.JSON(200, gin.H{"code": 201, "msg": "获取弹幕文件出错或此文件无弹幕，" + err.Error(), "data": ""})
 			return
 		}
-		c.JSON(200, gin.H{"code": 200, "msg": "获取弹幕文件成功", "data": file_data, "url": gallery.AlistHost + "/d" + path + "?sign=" + file_data.Data.Sign})
+		//c.JSON(200, gin.H{"code": 200, "msg": "获取弹幕文件成功", "data": file_data, "url": gallery.AlistHost + "/d" + path + "?sign=" + file_data.Data.Sign})
+		c.Redirect(302, gallery.AlistHost+"/d"+path+"?sign="+file_data.Data.Sign)
+		return
 
 	}
 }
