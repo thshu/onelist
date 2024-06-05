@@ -1,7 +1,6 @@
 appName="onelist"
 builtAt="$(date +'%F %T %z')"
 goVersion=$(go version | sed 's/go version //')
-gitAuthor="msterzhang <zhangguanping18@gmail.com>"
 gitCommit=$(git log --pretty=format:"%h" -1)
 
 if [ "$1" = "dev" ]; then
