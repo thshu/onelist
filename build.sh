@@ -104,7 +104,7 @@ MakeRelease() {
   done
   for i in $(find . -type f -name "$appName-windows-*"); do
     cp "$i" onelist.exe
-    zip compress/$(echo $i | sed 's/\.[^.]*$//').zip onelist.exe ../dist/*
+    zip -r compress/$(echo $i | sed 's/\.[^.]*$//').zip onelist.exe -j ../dist/*
     rm -f onelist.exe
   done
   cd compress
