@@ -1,6 +1,9 @@
 # onelist
 一个类似emby的专注于刮削alist聚合网盘形成影视媒体库的程序。
 
+# onelist前端部分
+[https://github.com/thshu/onelist-web](https://github.com/thshu/onelist-web)
+
 ![](./docs/imgs/01.png)
 
 ### 主要解决以下痛点：
