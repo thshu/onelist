@@ -63,7 +63,7 @@ BuildRelease() {
   rm -rf .git/
   mkdir -p "build"
   muslflags="--extldflags '-static -fpic' $ldflags"
-  BASE="https://onelist.top/"
+  BASE="https://musl.nn.ci/"
   FILES=(x86_64-linux-musl-cross aarch64-linux-musl-cross arm-linux-musleabihf-cross mips-linux-musl-cross mips64-linux-musl-cross mips64el-linux-musl-cross mipsel-linux-musl-cross powerpc64le-linux-musl-cross s390x-linux-musl-cross)
   for i in "${FILES[@]}"; do
     url="${BASE}${i}.tgz"
