@@ -53,7 +53,9 @@ func SearchTheDb(key string, tv bool) (ThedbSearchRsp, error) {
 	if err != nil {
 		return ThedbSearchRsp{}, err
 	}
-	req.Header.Set("User-Agent", config.UA)
+	//req.Header.Set("User-Agent", config.UA)
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", config.KeyDb))
 	client := http.Client{
 		Timeout: timeOut,
 	}
@@ -84,7 +86,9 @@ func GetCredits(id int, tv bool) (models.TheCredit, error) {
 	if err != nil {
 		return models.TheCredit{}, err
 	}
-	req.Header.Set("User-Agent", config.UA)
+	//req.Header.Set("User-Agent", config.UA)
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", config.KeyDb))
 	client := http.Client{
 		Timeout: timeOut,
 	}
@@ -122,7 +126,9 @@ func GetMovieData(id int) (models.TheMovie, error) {
 	if err != nil {
 		return models.TheMovie{}, err
 	}
-	req.Header.Set("User-Agent", config.UA)
+	//req.Header.Set("User-Agent", config.UA)
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", config.KeyDb))
 	client := http.Client{
 		Timeout: timeOut,
 	}
@@ -154,7 +160,9 @@ func GetTvData(id int) (models.TheTv, error) {
 	if err != nil {
 		return models.TheTv{}, err
 	}
-	req.Header.Set("User-Agent", config.UA)
+	//req.Header.Set("User-Agent", config.UA)
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", config.KeyDb))
 	client := http.Client{
 		Timeout: timeOut,
 	}
@@ -186,7 +194,9 @@ func GetTheSeasonData(id int, item int) (models.TheSeason, error) {
 	if err != nil {
 		return models.TheSeason{}, err
 	}
-	req.Header.Set("User-Agent", config.UA)
+	//req.Header.Set("User-Agent", config.UA)
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", config.KeyDb))
 	client := http.Client{
 		Timeout: timeOut,
 	}
@@ -229,7 +239,9 @@ func GetThePersonData(id int) (models.ThePerson, error) {
 	if err != nil {
 		return models.ThePerson{}, err
 	}
-	req.Header.Set("User-Agent", config.UA)
+	//req.Header.Set("User-Agent", config.UA)
+	req.Header.Add("accept", "application/json")
+	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", config.KeyDb))
 	// 设置本地代理
 	client := http.Client{
 		Timeout: timeOut,
