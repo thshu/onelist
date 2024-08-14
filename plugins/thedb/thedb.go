@@ -189,7 +189,7 @@ func GetTvData(id int) (models.TheTv, error) {
 
 // 获取电视每季详情
 func GetTheSeasonData(id int, item int) (models.TheSeason, error) {
-	api := fmt.Sprintf("%s/tv/%d/season/%d?api_key=%s&language=zh", TheApi, id, item, config.KeyDb)
+	api := fmt.Sprintf("%s/tv/%d/season/%d?language=zh", TheApi, id, item)
 	req, err := http.NewRequest("GET", api, nil)
 	if err != nil {
 		return models.TheSeason{}, err

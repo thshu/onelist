@@ -49,7 +49,7 @@ func Get(c *gin.Context) {
 			paths := strings.Split(path, "/")
 			file_name := strings.Split(paths[len(paths)-1], ".")
 			barrage_file_name := strings.Join(file_name[:len(file_name)-1], ".") + ".xml"
-			path = strings.Join(paths[:len(paths)-1], "/") + "/弹幕/" + barrage_file_name
+			path = "/弹幕" + strings.Join(paths[:len(paths)-1], "/") + "/弹幕/" + barrage_file_name
 			file_data, err := alist.AlistFileUrl(gallery, path)
 			if err != nil {
 				c.JSON(200, gin.H{"code": 201, "msg": "获取弹幕文件出错或此文件无弹幕，" + err.Error(), "data": ""})
